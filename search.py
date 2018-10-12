@@ -65,6 +65,7 @@ def tinyMazeSearch(problem):
   from game import Directions
   s = Directions.SOUTH
   w = Directions.WEST
+  print(problem.getSuccessors(problem.getStartState()))
   return  [s,s,w,s,w,w,s,w]
 
 def depthFirstSearch(problem):
@@ -82,12 +83,72 @@ def depthFirstSearch(problem):
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   """
   "*** YOUR CODE HERE ***"
+  from game import Directions
+  from util import Stack
+
+  trajectory = []
+  init_state = problem.getStartState()
+  state = init_state
+  stack = Stack()
+  dir_dict = {'South': Directions.SOUTH, 'West': Directions.WEST,
+              'North': Directions.NORTH, 'East': Directions.EAST}
+
+  stack.push(state)
+  head = {}
+  tree = head
+  seen = []
+
+  while not stack.isEmpty():
+    state = stack.pop()
+    
+    if problem.isGoalState(state):
+      while state != init_state:
+        trajectory.append(tree[state]['action'])
+        state = tree[state]['prev']
+      trajectory = list(reversed(trajectory))
+      return trajectory
+
+    for next_state in problem.getSuccessors(state):
+      if next_state[0] not in seen:
+        stack.push(next_state[0])
+        tree[next_state[0]] = {'prev': state, 'action': next_state[1]}
+    seen.append(state)
   util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
   "Search the shallowest nodes in the search tree first. [p 81]"
   "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+  from game import Directions
+  from util import Queue
+
+  trajectory = []
+  init_state = problem.getStartState()
+  state = init_state
+  queue = Queue()
+  dir_dict = {'South': Directions.SOUTH, 'West': Directions.WEST,
+              'North': Directions.NORTH, 'East': Directions.EAST}
+
+  queue.push(state)
+  head = {}
+  tree = head
+  seen = []
+
+  while not queue.isEmpty():
+    state = queue.pop()
+    
+    if problem.isGoalState(state):
+      while state != init_state:
+        trajectory.append(tree[state]['action'])
+        state = tree[state]['prev']
+      trajectory = list(reversed(trajectory))
+      return trajectory
+
+    for next_state in problem.getSuccessors(state):
+      if next_state[0] not in seen:
+        queue.push(next_state[0])
+        tree[next_state[0]] = {'prev': state, 'action': next_state[1]}
+    seen.append(state)
+  # util.raiseNotDefined()
       
 def uniformCostSearch(problem):
   "Search the node of least total cost first. "
