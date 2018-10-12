@@ -113,7 +113,7 @@ def depthFirstSearch(problem):
         stack.push(next_state[0])
         tree[next_state[0]] = {'prev': state, 'action': next_state[1]}
     seen.append(state)
-  util.raiseNotDefined()
+  # util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
   "Search the shallowest nodes in the search tree first. [p 81]"
