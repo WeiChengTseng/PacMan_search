@@ -65,6 +65,11 @@ def tinyMazeSearch(problem):
   from game import Directions
   s = Directions.SOUTH
   w = Directions.WEST
+  init_state = problem.getStartState()
+  print('initial state:', init_state)
+  print('initail state next:', problem.getSuccessors(init_state))
+  print('reach goal:', problem.isGoalState(init_state))
+
   print(problem.getSuccessors(problem.getStartState()))
   return  [s,s,w,s,w,w,s,w]
 
@@ -113,7 +118,7 @@ def depthFirstSearch(problem):
         stack.push(next_state[0])
         tree[next_state[0]] = {'prev': state, 'action': next_state[1]}
     seen.append(state)
-  # util.raiseNotDefined()
+
 
 def breadthFirstSearch(problem):
   "Search the shallowest nodes in the search tree first. [p 81]"
@@ -148,12 +153,50 @@ def breadthFirstSearch(problem):
         queue.push(next_state[0])
         tree[next_state[0]] = {'prev': state, 'action': next_state[1]}
     seen.append(state)
-  # util.raiseNotDefined()
+
       
 def uniformCostSearch(problem):
   "Search the node of least total cost first. "
   "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+
+  from game import Directions
+  from util import PriorityQueue
+  from util import Counter
+
+  trajectory = []
+  init_state = problem.getStartState()
+  state = init_state
+  queue = PriorityQueue()
+  cost_counter = Counter()
+  dir_dict = {'South': Directions.SOUTH, 'West': Directions.WEST,
+              'North': Directions.NORTH, 'East': Directions.EAST}
+  init_cost = 0
+
+  queue.push(state, init_cost)
+  cost_counter[init_state] = init_cost
+  head = {}
+  tree = head
+  seen = []
+
+  while not queue.isEmpty():
+    state = queue.pop()
+    
+    if problem.isGoalState(state):
+      while state != init_state:
+        trajectory.append(tree[state]['action'])
+        state = tree[state]['prev']
+      trajectory = list(reversed(trajectory))
+      return trajectory
+
+    for next_state in problem.getSuccessors(state):
+      if next_state[0] not in seen:
+        cost_counter[next_state[0]] = cost_counter[state[0]] + next_state[2]
+        queue.push(next_state[0], cost_counter[next_state[0]])
+        tree[next_state[0]] = {'prev': state, 'action': next_state[1]}
+    seen.append(state)
+
+  print('The goal is not reachable!')
+  # util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
   """
@@ -165,6 +208,48 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
+
+
+  from game import Directions
+  from util import PriorityQueue
+  from util import Counter
+
+  trajectory = []
+  init_state = problem.getStartState()
+  state = init_state
+  queue = PriorityQueue()
+  dir_dict = {'South': Directions.SOUTH, 'West': Directions.WEST,
+              'North': Directions.NORTH, 'East': Directions.EAST}
+  
+  init_cost = 0
+  real_cost = Counter()
+  cost = Counter()
+
+
+  cost[init_state] = init_cost + nullHeuristic(init_cost)
+  queue.push(state, cost[init_state])
+  real_cost[init_cost] = init_cost
+  tree, seen = {}, []
+
+  while not queue.isEmpty():
+    state = queue.pop()
+    
+    if problem.isGoalState(state):
+      while state != init_state:
+        trajectory.append(tree[state]['action'])
+        state = tree[state]['prev']
+      trajectory = list(reversed(trajectory))
+      return trajectory
+
+    for next_state in problem.getSuccessors(state):
+      if next_state[0] not in seen:
+        real_cost[next_state[0]] = real_cost[state[0]] + next_state[2]
+        cost[next_state[0]] = real_cost[next_state[0]] + heuristic(next_state[0])
+        queue.push(next_state[0], cost[next_state[0]])
+        tree[next_state[0]] = {'prev': state, 'action': next_state[1]}
+    seen.append(state)
+
+  print('The goal is not reachable!')
   util.raiseNotDefined()
     
   
