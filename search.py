@@ -88,6 +88,8 @@ def depthFirstSearch(problem):
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   """
   "*** YOUR CODE HERE ***"
+  # define the node as (state, trajectory)
+  
   from util import Stack
   stack, seen = Stack(), set()
   stack.push((problem.getStartState(), []))
@@ -108,6 +110,8 @@ def breadthFirstSearch(problem):
   """
   Search the shallowest nodes in the search tree first.
   """
+  # define the node as (state, trajectory)
+
   from util import Queue
   queue, seen = Queue(), set()
   queue.push((problem.getStartState(), []))
@@ -125,6 +129,7 @@ def breadthFirstSearch(problem):
           queue.push((successor, trajectory + [action]))
 
 def uniformCostSearch(problem):
+  # define the node as (state, trajectory)
   from util import PriorityQueue
   from util import Counter
   queue, seen, cost_counter = PriorityQueue(), set(), Counter()
@@ -154,6 +159,8 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
+
+  # define the node as (state, trajectory)
   from util import PriorityQueue
   from util import Counter
   queue, seen, f, g = PriorityQueue(), set(), Counter(), Counter()
