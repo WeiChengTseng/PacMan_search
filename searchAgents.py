@@ -357,17 +357,20 @@ def cornersHeuristic(state, problem):
   it should be admissible.  (You need not worry about consistency for
   this heuristic to receive full credit.)
   """
-  corners = problem.corners # These are the corner coordinates
-  walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+  corners = problem.corners   # These are the corner coordinates
+  walls = problem.walls       # These are the walls of the maze, as a Grid (game.py)
   
   "*** YOUR CODE HERE ***"
+  import numpy as np
   manhattan = lambda p1, p2: abs(p1[0]-p2[0]) + abs(p1[1]-p2[1])
   heuri = []
   positon, corner = state
   for cor in corner:
     heuri = heuri + [manhattan(cor, positon)]
-  return sum(heuri) 
-  # return 0 # Default to trivial solution
+  if len(heuri) == 0:
+    return 0
+  else:
+    return max(heuri)
 
 class AStarCornersAgent(SearchAgent):
   "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
